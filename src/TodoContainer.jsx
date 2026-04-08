@@ -4,14 +4,18 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TaskCard from "./components/TaskCard";
-import { useState } from "react";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ToggleButton from "@mui/material/ToggleButton";
 import { v4 as uuidv4 } from "uuid";
+import { useState } from "react";
+import { useEffect } from "react";
 import { useContext } from "react";
 import { DataContext } from "./Data";
 
 export default function OutlinedCard() {
+  const [toggleType, setToggleType] = useState("All");
   const {Data, setData} = useContext(DataContext);
   const [newTask, setNewTask] = useState({ 
     title: "", 
@@ -19,22 +23,46 @@ export default function OutlinedCard() {
     isCompleted: false 
   });
 
+
+  let filteredData = Data;
+  if (toggleType === "Active") {
+    filteredData = Data.filter((task) => !task.isCompleted);
+  } else if (toggleType === "Completed") {
+    filteredData = Data.filter((task) => task.isCompleted);
+  } else{
+    filteredData = Data;
+  }
  
-  const tasks = Data.map((task) => {
+  const tasks = filteredData.map((task) => {
     return (
       <TaskCard key={task.id} task={task} />
     );
   });
 
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("tasks");
+    if (storedData) {
+      setData(JSON.parse(storedData));
+    }
+  }, []);
+
+  // ➕ Add Task
   const handleAddTask = () => {
     if (newTask.title.trim() === "" || newTask.description.trim() === "") {
       return;
     }
-
-    setData([
+    const newData =[
       ...Data,
-      { id: uuidv4(), title: newTask.title, description: newTask.description, isCompleted: newTask.isCompleted },
-    ]);
+      { 
+        id: uuidv4(),
+        title: newTask.title, 
+        description: newTask.description, 
+        isCompleted: newTask.isCompleted 
+      },
+    ]
+    setData(newData);
+    localStorage.setItem("tasks", JSON.stringify(newData));
     setNewTask({ title: "", description: "", isCompleted: false });
   };
 
@@ -46,16 +74,19 @@ export default function OutlinedCard() {
             <CardContent>
               <Typography variant="h3">Tasks</Typography>
               <hr></hr>
-              <Box
+              <ToggleButtonGroup
+               color="primary"
                 display={"flex"}
                 gap={1}
                 justifyContent={"center"}
                 sx={{ marginTop: "10px" }}
+                value={toggleType}
+                onChange={(e) => setToggleType(e.target.value)}
               >
-                <Button variant="contained">All</Button>
-                <Button variant="contained">Active</Button>
-                <Button variant="contained">Completed</Button>
-              </Box>
+                <ToggleButton value={"All"} variant="contained">All</ToggleButton>
+                <ToggleButton value={"Active"} variant="contained">Active</ToggleButton>
+                <ToggleButton value={"Completed"} variant="contained">Completed</ToggleButton>
+              </ToggleButtonGroup>
             </CardContent>
             <CardContent>{tasks}</CardContent>
             <CardContent>

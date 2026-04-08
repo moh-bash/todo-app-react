@@ -25,16 +25,18 @@ function TaskCard({ task }) {
   const { Data, setData } = useContext(DataContext);
 
   function clickedComplete() {
+    // ✅ Toggle the isCompleted property of the task
     const updatedCompleted = Data.map((t) => {
       if (t.id === task.id) {
         return { ...t, isCompleted: !task.isCompleted };
       }
       return t;
     });
+    localStorage.setItem("tasks", JSON.stringify(updatedCompleted));
     setData(updatedCompleted);
   }
 
-  // Delete dialog
+  // ➖ Delete dialog
   const [openDelete, setOpenDelete] = useState(false);
 
   const handleClickOpenDelete = () => {
@@ -44,10 +46,11 @@ function TaskCard({ task }) {
   const handleDelete = () => {
     const updatedDataBeforeDelete = Data.filter((t) => t.id !== task.id);
     setData(updatedDataBeforeDelete);
+    localStorage.setItem("tasks", JSON.stringify(updatedDataBeforeDelete));
     setOpenDelete(false);
   };
 
-  // Update dialog
+  // 🔁 Update dialog
   const [openUpdate, setOpenUpdate] = useState(false);
   const [updateTask, setUpdateTask] = useState({
     title: task.title,
@@ -67,6 +70,7 @@ function TaskCard({ task }) {
 
     });
     setData(updatedDataBeforeUpdate);
+    localStorage.setItem("tasks", JSON.stringify(updatedDataBeforeUpdate));
     setOpenUpdate(false);
   }
 

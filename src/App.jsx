@@ -18,12 +18,6 @@ let initialData = [
     description: "This is the first task",
     isCmpleted: false,
   },
-  {
-    id: uuidv4(),
-    title: "Task 2",
-    description: "This is the second task",
-    isCompleted: true,
-  },
   
 ];
 
