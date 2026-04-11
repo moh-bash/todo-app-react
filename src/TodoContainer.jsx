@@ -9,9 +9,7 @@ import TextField from "@mui/material/TextField";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import { v4 as uuidv4 } from "uuid";
-import { useState } from "react";
-import { useEffect } from "react";
-import { useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { DataContext } from "./Data";
 
 export default function OutlinedCard() {
@@ -24,14 +22,15 @@ export default function OutlinedCard() {
   });
 
 
-  let filteredData = Data;
+  let filteredData = useMemo(() => {
   if (toggleType === "Active") {
-    filteredData = Data.filter((task) => !task.isCompleted);
+     return Data.filter((task) => !task.isCompleted);
   } else if (toggleType === "Completed") {
-    filteredData = Data.filter((task) => task.isCompleted);
+    return Data.filter((task) => task.isCompleted);
   } else{
-    filteredData = Data;
+    return Data;
   }
+}, [Data, toggleType]);
  
   const tasks = filteredData.map((task) => {
     return (
@@ -88,7 +87,9 @@ export default function OutlinedCard() {
                 <ToggleButton value={"Completed"} variant="contained">Completed</ToggleButton>
               </ToggleButtonGroup>
             </CardContent>
-            <CardContent>{tasks}</CardContent>
+            <CardContent xs={12}>
+              {tasks}
+            </CardContent>
             <CardContent>
               <Grid container spacing={2} justifyContent={"center"}>
                 <Grid item xs={9}>

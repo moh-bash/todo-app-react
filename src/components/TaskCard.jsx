@@ -177,9 +177,11 @@ function TaskCard({ task }) {
             }}
           >
             <Grid xs={7}>
-              <Typography variant="h5">{task.title}</Typography>
-              <Typography variant="subtitle1" gutterBottom>
-                {task.description}
+              <Typography
+                 variant="h5"
+                 sx={{ textDecoration: task.isCompleted ? "line-through" : "none", color: task.isCompleted ? "gray" : "black" }}
+              >
+                {task.title}
               </Typography>
             </Grid>
             <Grid xs={5} container spacing={1}>
