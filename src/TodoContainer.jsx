@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect, useContext, useMemo } from "react";
 import { DataContext } from "./Data";
 import { blue, red } from "@mui/material/colors";
-import { SnackbarContext } from './SnackbarContext';
+import { useSnackbar } from './SnackbarContext';
 
 // dialog
 import Dialog from "@mui/material/Dialog";
@@ -24,7 +24,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 export default function OutlinedCard() {
   const [toggleType, setToggleType] = useState("All");
   const { Data, setData } = useContext(DataContext);
-  const {showSnackBar} = useContext(SnackbarContext);
+  const {showSnackBar} = useSnackbar();
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -80,7 +80,6 @@ export default function OutlinedCard() {
     setTask(task);
     setUpdateTask({ title: task.title, description: task.description });
     setOpenUpdate(true);
-    showSnackBar("Task updated successfully");
   };
 
   const handleUpdate = (task) => {
@@ -97,6 +96,7 @@ export default function OutlinedCard() {
     setData(updatedDataBeforeUpdate);
     localStorage.setItem("tasks", JSON.stringify(updatedDataBeforeUpdate));
     setOpenUpdate(false);
+    showSnackBar("Task updated successfully");
   };
 
   // ➖ Delete dialog
@@ -155,7 +155,7 @@ export default function OutlinedCard() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleDelete} variant="contained" color="error">
+          <Button onClick={() => handleDelete(task)} variant="contained" color="error">
             Delete
           </Button>
         </DialogActions>

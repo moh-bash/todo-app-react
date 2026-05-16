@@ -9,12 +9,12 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useContext } from "react";
 import { DataContext } from "../Data";
-import { SnackbarContext } from "../SnackbarContext";
+import { useSnackbar } from "../SnackbarContext";
 
 
 function TaskCard({ task, update, deleteT }) {
   const { Data, setData } = useContext(DataContext);
-  const { showSnackBar } = useContext(SnackbarContext);
+  const { showSnackBar } = useSnackbar();
 
   function clickedComplete() {
     // ✅ Toggle the isCompleted property of the task
