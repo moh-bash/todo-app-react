@@ -9,10 +9,12 @@ import TextField from "@mui/material/TextField";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import { v4 as uuidv4 } from "uuid";
-import { useState, useEffect, useContext, useMemo } from "react";
 import { DataContext } from "./Data";
 import { blue, red } from "@mui/material/colors";
 import { useSnackbar } from './SnackbarContext';
+import todoReducer from "./reducer/todoReducer";
+import { useState, useEffect, useContext, useMemo, useReducer } from "react";
+
 
 // dialog
 import Dialog from "@mui/material/Dialog";
@@ -23,7 +25,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 export default function OutlinedCard() {
   const [toggleType, setToggleType] = useState("All");
-  const { Data, setData } = useContext(DataContext);
+  const { Data2, setData } = useContext(DataContext);
   const {showSnackBar} = useSnackbar();
   const [newTask, setNewTask] = useState({
     title: "",
@@ -31,6 +33,8 @@ export default function OutlinedCard() {
     isCompleted: false,
   });
   const [task, setTask] = useState(null);
+
+  const [Data, dispatch] = useReducer(todoReducer, []);
 
   let filteredData = useMemo(() => {
     if (toggleType === "Active") {
@@ -54,17 +58,8 @@ export default function OutlinedCard() {
     if (newTask.title.trim() === "" || newTask.description.trim() === "") {
       return;
     }
-    const newData = [
-      ...Data,
-      {
-        id: uuidv4(),
-        title: newTask.title,
-        description: newTask.description,
-        isCompleted: newTask.isCompleted,
-      },
-    ];
-    setData(newData);
-    localStorage.setItem("tasks", JSON.stringify(newData));
+    dispatch({type: "added", payload: { title: newTask.title, description: newTask.description }});
+   
     setNewTask({ title: "", description: "", isCompleted: false });
     showSnackBar("Task added successfully");
   };
