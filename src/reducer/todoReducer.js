@@ -13,10 +13,38 @@ export default function todoReducer(stateTodo, action) {
                     isCompleted: false,
                 },
             ];
-
             localStorage.setItem("tasks", JSON.stringify(newData));
-
             return newData;
+        }
+
+        case "deleted": {
+            const updatedDataBeforeDelete = stateTodo.filter((t) => t.id !== action.payload.task.id);
+            localStorage.setItem("tasks", JSON.stringify(updatedDataBeforeDelete));
+            return updatedDataBeforeDelete;
+        }
+
+        case "updated": {
+            const updatedData = stateTodo.map((t) => {
+                if (t.id === action.payload.task.id) {
+                    return {
+                        ...t,
+                        title: action.payload.newTask.title,
+                        description: action.payload.newTask.description,
+                    };
+                }
+                localStorage.setItem("tasks", JSON.stringify(updatedData));
+                return t;
+            });
+            return updatedData;
+        }
+
+        case "lododLocal": {
+            const storedData = localStorage.getItem("tasks");
+            if (storedData) {
+                const dataLocal = JSON.parse(storedData);
+                return dataLocal;
+            }
+            return stateTodo;
         }
 
         default: {

@@ -26,7 +26,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 export default function OutlinedCard() {
   const [toggleType, setToggleType] = useState("All");
   const { Data2, setData } = useContext(DataContext);
-  const {showSnackBar} = useSnackbar();
+  const { showSnackBar } = useSnackbar();
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -47,10 +47,7 @@ export default function OutlinedCard() {
   }, [Data, toggleType]);
 
   useEffect(() => {
-    const storedData = localStorage.getItem("tasks");
-    if (storedData) {
-      setData(JSON.parse(storedData));
-    }
+    dispatch({ type: "lododLocal" });
   }, []);
 
   // ➕ Add Task
@@ -58,8 +55,8 @@ export default function OutlinedCard() {
     if (newTask.title.trim() === "" || newTask.description.trim() === "") {
       return;
     }
-    dispatch({type: "added", payload: { title: newTask.title, description: newTask.description }});
-   
+    dispatch({ type: "added", payload: { title: newTask.title, description: newTask.description } });
+
     setNewTask({ title: "", description: "", isCompleted: false });
     showSnackBar("Task added successfully");
   };
@@ -78,18 +75,7 @@ export default function OutlinedCard() {
   };
 
   const handleUpdate = (task) => {
-    const updatedDataBeforeUpdate = Data.map((t) => {
-      if (t.id === task.id) {
-        return {
-          ...t,
-          title: updateTask.title,
-          description: updateTask.description,
-        };
-      }
-      return t;
-    });
-    setData(updatedDataBeforeUpdate);
-    localStorage.setItem("tasks", JSON.stringify(updatedDataBeforeUpdate));
+    dispatch({ type: "updated", payload: { task, newTask: updateTask } });
     setOpenUpdate(false);
     showSnackBar("Task updated successfully");
   };
@@ -103,9 +89,7 @@ export default function OutlinedCard() {
   };
 
   const handleDelete = (task) => {
-    const updatedDataBeforeDelete = Data.filter((t) => t.id !== task.id);
-    setData(updatedDataBeforeDelete);
-    localStorage.setItem("tasks", JSON.stringify(updatedDataBeforeDelete));
+    dispatch({ type: "deleted", payload: { task } });
     setOpenDelete(false);
     showSnackBar("Task deleted successfully");
   };
