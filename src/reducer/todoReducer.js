@@ -32,9 +32,9 @@ export default function todoReducer(stateTodo, action) {
                         description: action.payload.newTask.description,
                     };
                 }
-                localStorage.setItem("tasks", JSON.stringify(updatedData));
                 return t;
             });
+            localStorage.setItem("tasks", JSON.stringify(updatedData));
             return updatedData;
         }
 

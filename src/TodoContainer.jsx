@@ -179,7 +179,7 @@ export default function OutlinedCard() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleUpdate} variant="contained" color="primary">
+          <Button onClick={()=> handleUpdate(task)} variant="contained" color="primary">
             Update
           </Button>
         </DialogActions>
