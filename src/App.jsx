@@ -1,7 +1,7 @@
 import TodoContainer from './TodoContainer';
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { DataContext } from './Data';
+import { TodoProvider } from './Data';
 import { v4 as uuidv4 } from "uuid";
 import { useState } from 'react';
 import { SnackbarProvider } from './SnackbarContext';
@@ -29,11 +29,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <SnackbarProvider>
-        <DataContext.Provider value={{Data, setData}}>
+        <TodoProvider>
           <Container maxWidth="sm" style={{ display: "flex", alignItems: "center" , minHeight: "100vh" }}>
             <TodoContainer />
           </Container>
-        </DataContext.Provider>
+        </TodoProvider>
       </SnackbarProvider>
     </ThemeProvider>
   )

@@ -7,26 +7,19 @@ import { indigo, red } from "@mui/material/colors";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useContext } from "react";
-import { DataContext } from "../Data";
+import { useTodos } from "../Data";
 import { useSnackbar } from "../SnackbarContext";
 
 
 function TaskCard({ task, update, deleteT }) {
-  const { Data, setData } = useContext(DataContext);
+  const { Data, dispatch } = useTodos();
   const { showSnackBar } = useSnackbar();
 
   function clickedComplete() {
     // ✅ Toggle the isCompleted property of the task
-    const updatedCompleted = Data.map((t) => {
-      if (t.id === task.id) {
-        return { ...t, isCompleted: !task.isCompleted };
-      }
-      return t;
-    });
-    localStorage.setItem("tasks", JSON.stringify(updatedCompleted));
-    setData(updatedCompleted);
+    dispatch({ type: "toggleComplete", payload:  task });
     showSnackBar(task.isCompleted ? "Task marked as incomplete" : "Task marked as completed");
+
   }
 
   return (
@@ -54,8 +47,8 @@ function TaskCard({ task, update, deleteT }) {
           >
             <Grid xs={7}>
               <Typography
-                 variant="h5"
-                 sx={{ textDecoration: task.isCompleted ? "line-through" : "none", color: task.isCompleted ? "gray" : "black" }}
+                variant="h5"
+                sx={{ textDecoration: task.isCompleted ? "line-through" : "none", color: task.isCompleted ? "gray" : "black" }}
               >
                 {task.title}
               </Typography>
@@ -71,7 +64,7 @@ function TaskCard({ task, update, deleteT }) {
               <IconButton
                 aria-label="edit"
                 sx={{ boxShadow: 3 }}
-                onClick={()=> update(task)}
+                onClick={() => update(task)}
               >
                 <EditIcon />
               </IconButton>

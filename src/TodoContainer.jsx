@@ -9,11 +9,11 @@ import TextField from "@mui/material/TextField";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import { v4 as uuidv4 } from "uuid";
-import { DataContext } from "./Data";
+import { useTodos } from "./Data";
 import { blue, red } from "@mui/material/colors";
 import { useSnackbar } from './SnackbarContext';
 import todoReducer from "./reducer/todoReducer";
-import { useState, useEffect, useContext, useMemo, useReducer } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 
 // dialog
@@ -25,7 +25,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 export default function OutlinedCard() {
   const [toggleType, setToggleType] = useState("All");
-  const { Data2, setData } = useContext(DataContext);
+  const { Data, dispatch } = useTodos();
   const { showSnackBar } = useSnackbar();
   const [newTask, setNewTask] = useState({
     title: "",
@@ -34,7 +34,6 @@ export default function OutlinedCard() {
   });
   const [task, setTask] = useState(null);
 
-  const [Data, dispatch] = useReducer(todoReducer, []);
 
   let filteredData = useMemo(() => {
     if (toggleType === "Active") {
@@ -47,7 +46,7 @@ export default function OutlinedCard() {
   }, [Data, toggleType]);
 
   useEffect(() => {
-    dispatch({ type: "lododLocal" });
+    dispatch({ type: "loadLocal" });
   }, []);
 
   // ➕ Add Task

@@ -1,8 +1,9 @@
-import { createContext, useReducer } from "react";
-import { todoReducer } from "./reducer";
+import { createContext, useReducer, useContext } from "react";
+import todoReducer from "./reducer/todoReducer";
 
 const DataContext = createContext([]);
-const todoProvider =(children)=>{
+
+export const TodoProvider = ({ children }) => {
     const [Data, dispatch] = useReducer(todoReducer, []);
     return (
         <DataContext.Provider value={{ Data, dispatch }}>
@@ -11,5 +12,7 @@ const todoProvider =(children)=>{
     )
 }
 
-export { DataContext, todoProvider };
+export const useTodos = () => {
+    return useContext(DataContext);
+};
 

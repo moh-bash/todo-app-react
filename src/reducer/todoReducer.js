@@ -38,7 +38,7 @@ export default function todoReducer(stateTodo, action) {
             return updatedData;
         }
 
-        case "lododLocal": {
+        case "loadLocal": {
             const storedData = localStorage.getItem("tasks");
             if (storedData) {
                 const dataLocal = JSON.parse(storedData);
@@ -46,6 +46,16 @@ export default function todoReducer(stateTodo, action) {
             }
             return stateTodo;
         }
+
+        case "toggleComplete": {
+            const updatedCompleted = stateTodo.map((t) => {
+                if (t.id === action.payload.id) {
+                    return { ...t, isCompleted: !action.payload.isCompleted };
+                }
+                return t;
+            });
+            localStorage.setItem("tasks", JSON.stringify(updatedCompleted));
+            return updatedCompleted;}
 
         default: {
             return stateTodo;
